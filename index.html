@@ -413,6 +413,11 @@
 </head>
 <body>
 
+<!-- Save Banner -->
+<div id="save-banner" style="display:none; position:fixed; bottom:24px; right:24px; z-index:999; background:#049FD9; color:white; padding:14px 24px; border-radius:10px; box-shadow:0 8px 32px rgba(0,0,0,0.2); align-items:center; gap:12px; cursor:pointer; font-size:14px; font-weight:600;" onclick="saveAsHTML()">
+  All screenshots added! Click to download final HTML
+</div>
+
 <!-- Hero -->
 <div class="hero">
   <div class="hero-content">
@@ -599,8 +604,13 @@
           <span class="screenshot-title">Executive Overview</span>
           <span class="screenshot-badge">Page 1 of 4</span>
         </div>
-        <div class="screenshot-body">
-          <img src="portfolio_images/page1_executive_overview.png" alt="Executive Overview Dashboard showing KPI cards for Total PRs (5,529), Merge Rate (92.2%), Service Requests (10,871), SLA Compliance (77.8%), and Estimated Cost Savings ($109,500). Includes cycle time trend by team and SLA compliance by category bar chart.">
+        <div class="screenshot-body" id="drop-page1" onclick="triggerUpload('page1')" style="cursor:pointer; min-height:200px; display:flex; align-items:center; justify-content:center;">
+          <img id="img-page1" src="" alt="Executive Overview" style="display:none;">
+          <div class="upload-prompt" id="prompt-page1">
+            <div style="font-size:36px; color:#049FD9; margin-bottom:8px;">+</div>
+            <div style="font-size:14px; color:#718096; font-weight:500;">Click to add Executive Overview screenshot</div>
+          </div>
+          <input type="file" id="file-page1" accept="image/*" style="display:none;" onchange="handleUpload('page1', this)">
         </div>
         <div class="screenshot-caption">
           <p>KPI cards across the top provide the operational pulse. The cycle time trend (left) shows all 7 teams over 12 months with a constant average line. The SLA compliance chart (right) highlights which categories fall below the 90% target. The Team Health table surfaces automated risk classification based on trailing period delta.</p>
@@ -630,8 +640,13 @@
           <span class="screenshot-title">Engineering Delivery Deep Dive</span>
           <span class="screenshot-badge">Page 2 of 4</span>
         </div>
-        <div class="screenshot-body">
-          <img src="portfolio_images/page2_engineering.png" alt="Engineering page with team slicer, cycle time by date chart for all 7 teams, day-of-week combo chart showing Total PRs and Merge Rate, and PR Volume Heatmap matrix by team and month.">
+        <div class="screenshot-body" id="drop-page2" onclick="triggerUpload('page2')" style="cursor:pointer; min-height:200px; display:flex; align-items:center; justify-content:center;">
+          <img id="img-page2" src="" alt="Engineering Deep Dive" style="display:none;">
+          <div class="upload-prompt" id="prompt-page2">
+            <div style="font-size:36px; color:#049FD9; margin-bottom:8px;">+</div>
+            <div style="font-size:14px; color:#718096; font-weight:500;">Click to add Engineering Deep Dive screenshot</div>
+          </div>
+          <input type="file" id="file-page2" accept="image/*" style="display:none;" onchange="handleUpload('page2', this)">
         </div>
         <div class="screenshot-caption">
           <p>Team slicer (left) enables filtering across all visuals. The cycle time chart (top) plots daily averages by team with trend lines. The day-of-week combo chart (bottom left) reveals that Friday PRs have lower merge rates. The PR Volume Heatmap (bottom right) uses conditional formatting to highlight volume surges, with Dec 2025 (538 PRs) and Sep 2025 (534 PRs) as the peak months.</p>
@@ -661,8 +676,13 @@
           <span class="screenshot-title">Service Ops & SLA Analysis</span>
           <span class="screenshot-badge">Page 3 of 4</span>
         </div>
-        <div class="screenshot-body">
-          <img src="portfolio_images/page3_service_ops.png" alt="Service Ops page showing Avg Resolution by Priority with error bars, Backlog Trend combo chart with cumulative backlog area and breach line, category slicer, and Escalation Pattern matrix with conditional formatting.">
+        <div class="screenshot-body" id="drop-page3" onclick="triggerUpload('page3')" style="cursor:pointer; min-height:200px; display:flex; align-items:center; justify-content:center;">
+          <img id="img-page3" src="" alt="Service Ops & SLA" style="display:none;">
+          <div class="upload-prompt" id="prompt-page3">
+            <div style="font-size:36px; color:#049FD9; margin-bottom:8px;">+</div>
+            <div style="font-size:14px; color:#718096; font-weight:500;">Click to add Service Ops screenshot</div>
+          </div>
+          <input type="file" id="file-page3" accept="image/*" style="display:none;" onchange="handleUpload('page3', this)">
         </div>
         <div class="screenshot-caption">
           <p>The resolution chart (top left) shows P1-Critical requests average 8.6 hours with high variance. The backlog trend (top right) reveals a linearly growing cumulative backlog with breach spike correlation. The escalation matrix (bottom) uses red-green conditional formatting to surface high-risk team-category pairs, with Vendor Onboarding and Compliance Audit showing escalation rates above 25%.</p>
@@ -692,8 +712,13 @@
           <span class="screenshot-title">Predictive Model & Business Impact</span>
           <span class="screenshot-badge">Page 4 of 4</span>
         </div>
-        <div class="screenshot-body">
-          <img src="portfolio_images/page4_predictive.png" alt="Predictive Model page showing 246 High Risk requests flagged, 219 Estimated Breaches Prevented, $109.5K Estimated Annual Savings, 17% Predicted Breach Rate. Includes Risk Score Distribution histogram, Risk Tier donut chart, and Feature Importance bar chart.">
+        <div class="screenshot-body" id="drop-page4" onclick="triggerUpload('page4')" style="cursor:pointer; min-height:200px; display:flex; align-items:center; justify-content:center;">
+          <img id="img-page4" src="" alt="Predictive Model" style="display:none;">
+          <div class="upload-prompt" id="prompt-page4">
+            <div style="font-size:36px; color:#049FD9; margin-bottom:8px;">+</div>
+            <div style="font-size:14px; color:#718096; font-weight:500;">Click to add Predictive Model screenshot</div>
+          </div>
+          <input type="file" id="file-page4" accept="image/*" style="display:none;" onchange="handleUpload('page4', this)">
         </div>
         <div class="screenshot-caption">
           <p>Impact cards (top) translate model performance into business value. The risk distribution histogram (bottom left) shows most requests cluster in the low-risk range with a clear high-risk tail. The donut chart (center) breaks down the risk tier proportions. Feature importance (right) reveals that number of touchpoints, priority level, and category are the strongest predictors of SLA breach.</p>
@@ -782,6 +807,67 @@
 </div>
 
 <script>
+  // Image upload handling
+  function triggerUpload(pageId) {
+    document.getElementById('file-' + pageId).click();
+  }
+
+  function handleUpload(pageId, input) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const img = document.getElementById('img-' + pageId);
+      img.src = e.target.result;
+      img.style.display = 'block';
+      document.getElementById('prompt-' + pageId).style.display = 'none';
+      document.getElementById('drop-' + pageId).style.cursor = 'default';
+      document.getElementById('drop-' + pageId).onclick = null;
+      checkAllUploaded();
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function checkAllUploaded() {
+    const pages = ['page1','page2','page3','page4'];
+    const allDone = pages.every(p => document.getElementById('img-' + p).src && document.getElementById('img-' + p).style.display !== 'none');
+    if (allDone) {
+      document.getElementById('save-banner').style.display = 'flex';
+    }
+  }
+
+  function saveAsHTML() {
+    // Remove upload prompts, file inputs, save banner, and onclick handlers
+    const clone = document.documentElement.cloneNode(true);
+    clone.querySelectorAll('.upload-prompt, input[type="file"], #save-banner').forEach(el => el.remove());
+    clone.querySelectorAll('.screenshot-body').forEach(el => {
+      el.style.cursor = '';
+      el.removeAttribute('onclick');
+      el.style.minHeight = '';
+      el.style.display = '';
+      el.style.alignItems = '';
+      el.style.justifyContent = '';
+    });
+    clone.querySelectorAll('.screenshot-body img').forEach(img => {
+      img.style.display = 'block';
+    });
+    // Remove the upload/save JS functions
+    const scripts = clone.querySelectorAll('script');
+    scripts.forEach(s => {
+      if (s.textContent.includes('triggerUpload')) {
+        s.textContent = s.textContent.replace(/\/\/ Image upload handling[\s\S]*?function saveAsHTML\(\)[\s\S]*?\n  \}/, '');
+      }
+    });
+
+    const html = '<!DOCTYPE html>\n<html lang="en">' + clone.innerHTML + '</html>';
+    const blob = new Blob([html], {type: 'text/html'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'Portfolio_Dashboard_Final.html';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
   // Smooth scroll for navigation
   document.querySelectorAll('.nav-link').forEach(link => {
     link.addEventListener('click', function(e) {
