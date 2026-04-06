@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Michelle Chan | Operational Efficiency Dashboard Case Study</title>
+<style>
+  :root {
+    --cisco-teal: #049FD9;
+    --cisco-dark: #004C6D;
+    --cisco-navy: #00263E;
+    --accent-green: #00B050;
+    --accent-red: #FF4444;
+    --accent-amber: #FFB900;
+    --bg-light: #F4F6F9;
+    --bg-white: #FFFFFF;
+    --text-primary: #1A1A2E;
+    --text-secondary: #4A5568;
+    --text-muted: #718096;
+    --border: #E2E8F0;
+    --shadow: 0 4px 24px rgba(0, 38, 62, 0.08);
+    --shadow-lg: 0 12px 48px rgba(0, 38, 62, 0.12);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: var(--bg-light);
+    color: var(--text-primary);
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Hero */
+  .hero {
+    background: linear-gradient(135deg, var(--cisco-navy) 0%, var(--cisco-dark) 50%, var(--cisco-teal) 100%);
+    color: white;
+    padding: 80px 0 60px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(4, 159, 217, 0.15) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .hero-content {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 40px;
+    position: relative;
+    z-index: 1;
+  }
+  .hero-label {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 16px;
+  }
+  .hero h1 {
+    font-size: 42px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 12px;
+  }
+  .hero h1 span { color: var(--cisco-teal); }
+  .hero-subtitle {
+    font-size: 18px;
+    color: rgba(255,255,255,0.75);
+    max-width: 700px;
+    margin-bottom: 32px;
+  }
+
+  /* Navigation */
+  .nav-bar {
+    background: var(--bg-white);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 1px 8px rgba(0,0,0,0.04);
+  }
+  .nav-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 40px;
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+  }
+  .nav-link {
+    padding: 14px 18px;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+  .nav-link:hover, .nav-link.active {
+    color: var(--cisco-dark);
+    border-bottom-color: var(--cisco-teal);
+  }
+
+  /* Main */
+  .main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 48px 40px 80px;
+  }
+
+  /* Section */
+  .section {
+    margin-bottom: 56px;
+  }
+  .section-label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--cisco-teal);
+    margin-bottom: 8px;
+  }
+  .section h2 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--cisco-navy);
+    margin-bottom: 16px;
+  }
+  .section p {
+    font-size: 15.5px;
+    color: var(--text-secondary);
+    max-width: 800px;
+    margin-bottom: 12px;
+  }
+
+  /* Cards */
+  .card {
+    background: var(--bg-white);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    padding: 32px;
+    margin-bottom: 24px;
+  }
+  .card h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--cisco-dark);
+    margin-bottom: 12px;
+  }
+  .card p {
+    font-size: 14.5px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+
+  /* Screenshot container */
+  .screenshot-section {
+    margin: 40px 0;
+  }
+  .screenshot-card {
+    background: var(--bg-white);
+    border-radius: 12px;
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+    margin-bottom: 36px;
+  }
+  .screenshot-header {
+    padding: 20px 28px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .screenshot-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+  .screenshot-dot.red { background: #FF5F56; }
+  .screenshot-dot.yellow { background: #FFBD2E; }
+  .screenshot-dot.green { background: #27C93F; }
+  .screenshot-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-left: 8px;
+  }
+  .screenshot-badge {
+    margin-left: auto;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 20px;
+    background: rgba(4, 159, 217, 0.1);
+    color: var(--cisco-teal);
+  }
+  .screenshot-body {
+    padding: 4px;
+    background: #F0F2F5;
+  }
+  .screenshot-body img {
+    width: 100%;
+    display: block;
+    border-radius: 4px;
+  }
+  .screenshot-caption {
+    padding: 16px 28px 20px;
+    border-top: 1px solid var(--border);
+  }
+  .screenshot-caption p {
+    font-size: 13.5px;
+    color: var(--text-muted);
+    margin: 0;
+  }
+
+  /* Methodology grid */
+  .method-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 24px;
+  }
+  @media (max-width: 768px) {
+    .method-grid { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 28px; }
+    .main { padding: 32px 20px 60px; }
+    .hero-content { padding: 0 20px; }
+    .nav-inner { padding: 0 20px; }
+  }
+
+  /* Pipeline */
+  .pipeline {
+    display: flex;
+    gap: 0;
+    margin: 32px 0;
+    flex-wrap: wrap;
+  }
+  .pipeline-step {
+    flex: 1;
+    min-width: 160px;
+    padding: 20px 24px;
+    background: var(--bg-white);
+    border: 1px solid var(--border);
+    position: relative;
+    text-align: center;
+  }
+  .pipeline-step:first-child { border-radius: 10px 0 0 10px; }
+  .pipeline-step:last-child { border-radius: 0 10px 10px 0; }
+  .pipeline-step::after {
+    content: '\276F';
+    position: absolute;
+    right: -8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: var(--cisco-teal);
+    z-index: 2;
+    font-weight: 700;
+  }
+  .pipeline-step:last-child::after { display: none; }
+  .pipeline-num {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--cisco-teal);
+  }
+  .pipeline-label {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-top: 4px;
+  }
+  .pipeline-detail {
+    font-size: 11.5px;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  /* Tech tags */
+  .tech-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 16px;
+  }
+  .tech-tag {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 5px 14px;
+    border-radius: 20px;
+    background: rgba(4, 159, 217, 0.08);
+    color: var(--cisco-dark);
+  }
+
+  /* Metrics row */
+  .metrics-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin: 28px 0;
+  }
+  @media (max-width: 768px) {
+    .metrics-row { grid-template-columns: repeat(2, 1fr); }
+  }
+  .metric-card {
+    background: var(--bg-white);
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: var(--shadow);
+    border-top: 3px solid var(--cisco-teal);
+  }
+  .metric-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--cisco-navy);
+  }
+  .metric-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 4px;
+    font-weight: 500;
+  }
+
+  /* SQL block */
+  .code-block {
+    background: #1E293B;
+    color: #E2E8F0;
+    border-radius: 10px;
+    padding: 24px;
+    font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+    font-size: 13px;
+    line-height: 1.7;
+    overflow-x: auto;
+    margin: 16px 0;
+  }
+  .code-block .keyword { color: #7DD3FC; }
+  .code-block .function { color: #FDE68A; }
+  .code-block .comment { color: #64748B; }
+
+  /* Divider */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 48px 0;
+  }
+
+  /* Footer */
+  .footer {
+    background: var(--cisco-navy);
+    color: rgba(255,255,255,0.5);
+    text-align: center;
+    padding: 32px 40px;
+    font-size: 13px;
+  }
+  .footer a { color: var(--cisco-teal); text-decoration: none; }
+
+  /* Model table */
+  .model-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 14px;
+  }
+  .model-table th {
+    background: var(--cisco-navy);
+    color: white;
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 12.5px;
+    letter-spacing: 0.5px;
+  }
+  .model-table td {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-secondary);
+  }
+  .model-table tr:hover td {
+    background: rgba(4, 159, 217, 0.04);
+  }
+  .model-table .best {
+    font-weight: 700;
+    color: var(--accent-green);
+  }
+
+  /* Insight callout */
+  .callout {
+    border-left: 4px solid var(--cisco-teal);
+    background: rgba(4, 159, 217, 0.04);
+    padding: 16px 20px;
+    border-radius: 0 8px 8px 0;
+    margin: 16px 0;
+  }
+  .callout p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin: 0;
+  }
+  .callout strong { color: var(--cisco-dark); }
+</style>
+</head>
+<body>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-content">
+    <div class="hero-label">Portfolio Case Study</div>
+    <h1>Operational Efficiency Dashboard: <br><span>Engineering Delivery & Service Request Analytics</span></h1>
+    <p class="hero-subtitle">An end-to-end analytics platform combining engineering velocity tracking, SLA compliance monitoring, and predictive breach modeling to drive proactive operational decision-making.</p>
+    <p style="font-size: 15px; color: rgba(255,255,255,0.6); margin: 0;">Created by Michelle Chan</p>
+  </div>
+</div>
+
+<!-- Navigation -->
+<div class="nav-bar">
+  <div class="nav-inner">
+    <a href="#overview" class="nav-link active">Overview</a>
+    <a href="#methodology" class="nav-link">Methodology</a>
+    <a href="#data-pipeline" class="nav-link">Data Pipeline</a>
+    <a href="#dashboard-executive" class="nav-link">Executive View</a>
+    <a href="#dashboard-engineering" class="nav-link">Engineering</a>
+    <a href="#dashboard-serviceops" class="nav-link">Service Ops</a>
+    <a href="#dashboard-predictive" class="nav-link">Predictive Model</a>
+    <a href="#impact" class="nav-link">Business Impact</a>
+  </div>
+</div>
+
+<!-- Main Content -->
+<div class="main">
+
+  <!-- Overview -->
+  <div class="section" id="overview">
+    <div class="section-label">Overview</div>
+    <h2>The Problem</h2>
+    <p>Engineering teams and service operations lacked a unified view of delivery velocity, SLA performance, and emerging risk. Cycle time degradation went undetected for weeks, SLA breaches were reactive rather than preventable, and leadership had no single source of truth for operational health.</p>
+    <p>This project addresses those gaps by building a comprehensive analytics platform that monitors 5,529 pull requests across 7 engineering teams and 10,871 service requests across 10 categories, with a predictive layer that flags at-risk requests before they breach SLA.</p>
+
+    <div class="metrics-row">
+      <div class="metric-card">
+        <div class="metric-value">5,529</div>
+        <div class="metric-label">Pull Requests Analyzed</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value">10,871</div>
+        <div class="metric-label">Service Requests Tracked</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value">92.2%</div>
+        <div class="metric-label">Overall Merge Rate</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value">$109.5K</div>
+        <div class="metric-label">Est. Annual Savings</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Methodology -->
+  <div class="section" id="methodology">
+    <div class="section-label">Methodology</div>
+    <h2>How It Was Built</h2>
+    <p>The project follows a structured analytics engineering approach: generate representative operational data, transform it with production-grade SQL, build predictive models from scratch, and surface insights through an interactive Power BI dashboard.</p>
+
+    <div class="pipeline">
+      <div class="pipeline-step">
+        <div class="pipeline-num">01</div>
+        <div class="pipeline-label">Data Generation</div>
+        <div class="pipeline-detail">Synthetic ops data with injected anomalies</div>
+      </div>
+      <div class="pipeline-step">
+        <div class="pipeline-num">02</div>
+        <div class="pipeline-label">SQL Transforms</div>
+        <div class="pipeline-detail">CTEs, window functions, temporal aggregation</div>
+      </div>
+      <div class="pipeline-step">
+        <div class="pipeline-num">03</div>
+        <div class="pipeline-label">ML Pipeline</div>
+        <div class="pipeline-detail">Logistic Regression, Random Forest, Ensemble</div>
+      </div>
+      <div class="pipeline-step">
+        <div class="pipeline-num">04</div>
+        <div class="pipeline-label">Power BI</div>
+        <div class="pipeline-detail">4-page interactive dashboard with DAX</div>
+      </div>
+    </div>
+
+    <div class="method-grid">
+      <div class="card">
+        <h3>Data Layer</h3>
+        <p>Two primary datasets stored in a relational database: GitHub pull request data (5,529 rows across 7 teams and 21 repos) and service request data (10,871 rows across 10 categories and 4 priority levels). Deliberate anomaly patterns were injected, including team degradation trends, holiday volume surges, and staffing bottleneck signatures, to test the detection capabilities of the downstream analytics.</p>
+        <div class="tech-tags">
+          <span class="tech-tag">Python</span>
+          <span class="tech-tag">SQLite</span>
+          <span class="tech-tag">Snowflake-compatible</span>
+        </div>
+      </div>
+      <div class="card">
+        <h3>SQL Transformation Layer</h3>
+        <p>Eight production-grade SQL queries handle all data transformation: weekly cycle time aggregation with LAG-based delta detection, risk signal identification using rolling window functions, SLA compliance rates with conditional aggregation, backlog trend analysis, resolution time distribution with PERCENTILE_CONT, ML feature engineering, and escalation pattern cross-tabulation.</p>
+        <div class="tech-tags">
+          <span class="tech-tag">SQL</span>
+          <span class="tech-tag">CTEs</span>
+          <span class="tech-tag">Window Functions</span>
+          <span class="tech-tag">PERCENTILE_CONT</span>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Predictive Modeling Layer</h3>
+        <p>Three models built entirely from scratch using NumPy (no scikit-learn): Logistic Regression with L2 regularization and gradient descent, a Decision Tree using recursive Gini impurity splitting (max depth 8), and a Random Forest (10 bagged trees with bootstrap sampling). An ensemble model averages the Logistic Regression and Random Forest probabilities. Temporal train/test split (80/20) prevents data leakage.</p>
+        <div class="tech-tags">
+          <span class="tech-tag">Python</span>
+          <span class="tech-tag">NumPy</span>
+          <span class="tech-tag">From Scratch</span>
+          <span class="tech-tag">Ensemble</span>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Visualization Layer</h3>
+        <p>A 4-page Power BI dashboard with 17+ DAX measures, a custom DateTable with Cisco fiscal year alignment, conditional formatting, cross-filtering, and page navigation. Measures include time intelligence (trailing period comparisons), risk classification (SWITCH-based health scoring), and business impact estimation. The dashboard tells a story from executive summary to team-level drill-through.</p>
+        <div class="tech-tags">
+          <span class="tech-tag">Power BI</span>
+          <span class="tech-tag">DAX</span>
+          <span class="tech-tag">Data Modeling</span>
+          <span class="tech-tag">Conditional Formatting</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Data Pipeline -->
+  <div class="section" id="data-pipeline">
+    <div class="section-label">Data Pipeline</div>
+    <h2>SQL Transformation Examples</h2>
+    <p>The SQL layer demonstrates Snowflake-compatible query patterns including CTEs, window functions, and temporal aggregation. Below is a representative query for weekly cycle time analysis with trailing period comparison.</p>
+
+    <div class="code-block">
+      <span class="comment">-- Weekly Cycle Time by Team with Trailing Average Delta</span><br>
+      <span class="keyword">WITH</span> weekly_metrics <span class="keyword">AS</span> (<br>
+      &nbsp;&nbsp;<span class="keyword">SELECT</span><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;team,<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="function">DATE_TRUNC</span>(<span class="keyword">'week'</span>, opened_at) <span class="keyword">AS</span> week_start,<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="function">AVG</span>(cycle_time_hours) <span class="keyword">AS</span> avg_cycle_time,<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="function">COUNT</span>(*) <span class="keyword">AS</span> pr_count,<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="function">AVG</span>(<span class="keyword">CASE WHEN</span> is_merged = 1 <span class="keyword">THEN</span> 1.0 <span class="keyword">ELSE</span> 0.0 <span class="keyword">END</span>) <span class="keyword">AS</span> merge_rate<br>
+      &nbsp;&nbsp;<span class="keyword">FROM</span> github_pull_requests<br>
+      &nbsp;&nbsp;<span class="keyword">GROUP BY</span> team, <span class="function">DATE_TRUNC</span>(<span class="keyword">'week'</span>, opened_at)<br>
+      )<br>
+      <span class="keyword">SELECT</span><br>
+      &nbsp;&nbsp;*,<br>
+      &nbsp;&nbsp;<span class="function">LAG</span>(avg_cycle_time, 4) <span class="keyword">OVER</span> (<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">PARTITION BY</span> team <span class="keyword">ORDER BY</span> week_start<br>
+      &nbsp;&nbsp;) <span class="keyword">AS</span> trailing_4wk_avg,<br>
+      &nbsp;&nbsp;<span class="function">ROUND</span>(<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;(avg_cycle_time - <span class="function">LAG</span>(avg_cycle_time, 4) <span class="keyword">OVER</span> (<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">PARTITION BY</span> team <span class="keyword">ORDER BY</span> week_start<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;)) / <span class="function">NULLIF</span>(<span class="function">LAG</span>(avg_cycle_time, 4) <span class="keyword">OVER</span> (<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">PARTITION BY</span> team <span class="keyword">ORDER BY</span> week_start<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;), 0) * 100, 1<br>
+      &nbsp;&nbsp;) <span class="keyword">AS</span> delta_pct<br>
+      <span class="keyword">FROM</span> weekly_metrics<br>
+      <span class="keyword">ORDER BY</span> team, week_start;
+    </div>
+
+    <div class="callout">
+      <p><strong>Why this matters:</strong> This query pattern identifies teams with degrading cycle times weeks before it would appear in a monthly report. The LAG window function compares each week against the same team's performance 4 weeks prior, surfacing gradual degradation that averages would hide.</p>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Dashboard: Executive Overview -->
+  <div class="section" id="dashboard-executive">
+    <div class="section-label">Power BI Dashboard</div>
+    <h2>Page 1: Executive Overview</h2>
+    <p>The executive page answers "so what?" in under 5 seconds. Five KPI cards provide the operational pulse, a cycle time trend chart reveals team-level velocity patterns, an SLA compliance bar chart highlights underperforming categories, and a Team Health table provides automated risk classification.</p>
+
+    <div class="screenshot-section">
+      <div class="screenshot-card">
+        <div class="screenshot-header">
+          <div class="screenshot-dot red"></div>
+          <div class="screenshot-dot yellow"></div>
+          <div class="screenshot-dot green"></div>
+          <span class="screenshot-title">Executive Overview</span>
+          <span class="screenshot-badge">Page 1 of 4</span>
+        </div>
+        <div class="screenshot-body">
+          <img src="portfolio_images/page1_executive_overview.png" alt="Executive Overview Dashboard showing KPI cards for Total PRs (5,529), Merge Rate (92.2%), Service Requests (10,871), SLA Compliance (77.8%), and Estimated Cost Savings ($109,500). Includes cycle time trend by team and SLA compliance by category bar chart.">
+        </div>
+        <div class="screenshot-caption">
+          <p>KPI cards across the top provide the operational pulse. The cycle time trend (left) shows all 7 teams over 12 months with a constant average line. The SLA compliance chart (right) highlights which categories fall below the 90% target. The Team Health table surfaces automated risk classification based on trailing period delta.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <p><strong>Key Insight:</strong> The SLA compliance chart immediately reveals that 6 of 10 categories fall below the 90% SLA target, with Vendor Onboarding (21.3%), Security Review (30.7%), and Compliance Audit (33.0%) as the worst performers. The Team Health table shows Infra-SRE and Security with the highest average cycle times (56+ hours), flagging them for leadership attention.</p>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Dashboard: Engineering -->
+  <div class="section" id="dashboard-engineering">
+    <div class="section-label">Power BI Dashboard</div>
+    <h2>Page 2: Engineering Delivery Deep Dive</h2>
+    <p>This page enables team-level drill-down with interactive slicers for team selection and date range filtering. The cycle time chart shows daily granularity from the raw PR data, a day-of-week combo chart reveals merge rate patterns by weekday, and a heatmap matrix highlights PR volume concentration by team and month.</p>
+
+    <div class="screenshot-section">
+      <div class="screenshot-card">
+        <div class="screenshot-header">
+          <div class="screenshot-dot red"></div>
+          <div class="screenshot-dot yellow"></div>
+          <div class="screenshot-dot green"></div>
+          <span class="screenshot-title">Engineering Delivery Deep Dive</span>
+          <span class="screenshot-badge">Page 2 of 4</span>
+        </div>
+        <div class="screenshot-body">
+          <img src="portfolio_images/page2_engineering.png" alt="Engineering page with team slicer, cycle time by date chart for all 7 teams, day-of-week combo chart showing Total PRs and Merge Rate, and PR Volume Heatmap matrix by team and month.">
+        </div>
+        <div class="screenshot-caption">
+          <p>Team slicer (left) enables filtering across all visuals. The cycle time chart (top) plots daily averages by team with trend lines. The day-of-week combo chart (bottom left) reveals that Friday PRs have lower merge rates. The PR Volume Heatmap (bottom right) uses conditional formatting to highlight volume surges, with Dec 2025 (538 PRs) and Sep 2025 (534 PRs) as the peak months.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <p><strong>Key Insight:</strong> The heatmap reveals clear quarter-end PR volume spikes (Dec 2025: 538 total PRs vs. Feb 2026: 416), indicating release deadline pressure. Thursday shows the highest merge rate (92.8%) while Friday drops to 90.9%, suggesting a policy opportunity around late-week code reviews.</p>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Dashboard: Service Ops -->
+  <div class="section" id="dashboard-serviceops">
+    <div class="section-label">Power BI Dashboard</div>
+    <h2>Page 3: Service Ops & SLA</h2>
+    <p>The service operations page combines backlog trend monitoring with resolution time analysis and escalation pattern detection. The combo chart overlays cumulative backlog growth with daily breach counts, the resolution bar chart uses error bars to show variance by priority level, and the escalation matrix identifies team-category combinations with the highest escalation rates.</p>
+
+    <div class="screenshot-section">
+      <div class="screenshot-card">
+        <div class="screenshot-header">
+          <div class="screenshot-dot red"></div>
+          <div class="screenshot-dot yellow"></div>
+          <div class="screenshot-dot green"></div>
+          <span class="screenshot-title">Service Ops & SLA Analysis</span>
+          <span class="screenshot-badge">Page 3 of 4</span>
+        </div>
+        <div class="screenshot-body">
+          <img src="portfolio_images/page3_service_ops.png" alt="Service Ops page showing Avg Resolution by Priority with error bars, Backlog Trend combo chart with cumulative backlog area and breach line, category slicer, and Escalation Pattern matrix with conditional formatting.">
+        </div>
+        <div class="screenshot-caption">
+          <p>The resolution chart (top left) shows P1-Critical requests average 8.6 hours with high variance. The backlog trend (top right) reveals a linearly growing cumulative backlog with breach spike correlation. The escalation matrix (bottom) uses red-green conditional formatting to surface high-risk team-category pairs, with Vendor Onboarding and Compliance Audit showing escalation rates above 25%.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <p><strong>Key Insight:</strong> The backlog is growing linearly with no sign of stabilization, meaning incoming volume consistently exceeds resolution capacity. Vendor Onboarding (28.15% escalation rate) and Security Review (22.55%) are the most problematic categories across all teams, suggesting systemic process issues rather than team-specific problems.</p>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Dashboard: Predictive Model -->
+  <div class="section" id="dashboard-predictive">
+    <div class="section-label">Power BI Dashboard</div>
+    <h2>Page 4: Predictive Breach Model</h2>
+    <p>This page is the differentiator. Rather than just reporting on past SLA breaches, a machine learning model predicts which incoming service requests are likely to breach before they do, giving operations teams a window to intervene. The page shows risk score distribution, risk tier breakdown, feature importance, and business impact cards.</p>
+
+    <div class="screenshot-section">
+      <div class="screenshot-card">
+        <div class="screenshot-header">
+          <div class="screenshot-dot red"></div>
+          <div class="screenshot-dot yellow"></div>
+          <div class="screenshot-dot green"></div>
+          <span class="screenshot-title">Predictive Model & Business Impact</span>
+          <span class="screenshot-badge">Page 4 of 4</span>
+        </div>
+        <div class="screenshot-body">
+          <img src="portfolio_images/page4_predictive.png" alt="Predictive Model page showing 246 High Risk requests flagged, 219 Estimated Breaches Prevented, $109.5K Estimated Annual Savings, 17% Predicted Breach Rate. Includes Risk Score Distribution histogram, Risk Tier donut chart, and Feature Importance bar chart.">
+        </div>
+        <div class="screenshot-caption">
+          <p>Impact cards (top) translate model performance into business value. The risk distribution histogram (bottom left) shows most requests cluster in the low-risk range with a clear high-risk tail. The donut chart (center) breaks down the risk tier proportions. Feature importance (right) reveals that number of touchpoints, priority level, and category are the strongest predictors of SLA breach.</p>
+        </div>
+      </div>
+    </div>
+
+    <h3 style="margin-top:32px; color: var(--cisco-dark);">Model Performance Comparison</h3>
+    <table class="model-table">
+      <thead>
+        <tr>
+          <th>Model</th>
+          <th>Accuracy</th>
+          <th>Precision</th>
+          <th>Recall</th>
+          <th>F1 Score</th>
+          <th>AUC</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Logistic Regression</td>
+          <td>84.3%</td>
+          <td>75.2%</td>
+          <td>44.9%</td>
+          <td>56.2%</td>
+          <td>0.846</td>
+        </tr>
+        <tr>
+          <td>Random Forest</td>
+          <td class="best">93.0%</td>
+          <td class="best">90.3%</td>
+          <td class="best">77.3%</td>
+          <td class="best">83.3%</td>
+          <td class="best">0.973</td>
+        </tr>
+        <tr>
+          <td>Ensemble (LR + RF)</td>
+          <td>90.0%</td>
+          <td>87.8%</td>
+          <td>64.5%</td>
+          <td>74.4%</td>
+          <td>0.951</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <p><strong>Business Translation:</strong> The model flags 337 service requests as likely to breach SLA, with 246 classified as high risk. Assuming a 65% intervention success rate, that translates to approximately 219 SLA breaches prevented per year. At an estimated $500 per prevented breach (escalation cost, analyst hours, customer impact), the model delivers roughly $109,500 in annual savings.</p>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Business Impact -->
+  <div class="section" id="impact">
+    <div class="section-label">Business Impact</div>
+    <h2>What This Delivers</h2>
+
+    <div class="method-grid">
+      <div class="card">
+        <h3>Proactive Risk Detection</h3>
+        <p>The predictive model shifts SLA management from reactive to proactive. Instead of discovering breaches after they happen, ops teams receive early warning signals at intake time, enabling resource reallocation and priority adjustments before deadlines are missed.</p>
+      </div>
+      <div class="card">
+        <h3>Automated Health Monitoring</h3>
+        <p>The Team Health classification (HEALTHY / WATCH / AT RISK) eliminates the need for manual weekly reviews. Cycle time degradation is surfaced automatically through trailing period comparison, catching issues like the Infra-SRE degradation trend weeks before it would appear in a monthly report.</p>
+      </div>
+      <div class="card">
+        <h3>Data-Driven Capacity Planning</h3>
+        <p>The backlog trend analysis and PR volume heatmap provide evidence-based inputs for staffing and sprint planning. Quarter-end volume spikes are now quantified and predictable, enabling pre-emptive resource allocation rather than reactive firefighting.</p>
+      </div>
+      <div class="card">
+        <h3>Cross-Functional Transparency</h3>
+        <p>A single dashboard unifies engineering delivery metrics and service operations KPIs, breaking down the silos between teams. The escalation pattern matrix identifies systemic process issues (Vendor Onboarding, Security Review) that require cross-functional solutions rather than team-level fixes.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Footer -->
+<div class="footer">
+  <p>Michelle Chan | Business Operations Analyst | <a href="mailto:michellechankaryean@gmail.com">michellechankaryean@gmail.com</a></p>
+  <p style="margin-top: 8px;">Built with SQL, Python, Power BI, and DAX | FY2025-2026 Case Study</p>
+</div>
+
+<script>
+  // Smooth scroll for navigation
+  document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+
+  // Active nav on scroll
+  window.addEventListener('scroll', function() {
+    const sections = document.querySelectorAll('.section[id]');
+    let current = '';
+    sections.forEach(section => {
+      const top = section.offsetTop - 100;
+      if (window.scrollY >= top) {
+        current = section.getAttribute('id');
+      }
+    });
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.classList.remove('active');
+      if (link.getAttribute('href') === '#' + current) {
+        link.classList.add('active');
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
